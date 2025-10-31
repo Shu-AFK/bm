@@ -16,10 +16,10 @@ var AddBookmarkCmd = &cobra.Command{
 	Use:   "add <name> <path/url>",
 	Short: "Add a new bookmark",
 
-	RunE: exec,
+	RunE: add,
 }
 
-func exec(cmd *cobra.Command, args []string) error {
+func add(cmd *cobra.Command, args []string) error {
 	if len(args) < 2 {
 		pterm.Error.Println("usage: bm add <name> <path/url> [Flags]")
 		return nil
