@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/Shu-AFK/bm/internal"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
@@ -26,11 +28,11 @@ func list(cmd *cobra.Command, args []string) error {
 	}
 
 	data := pterm.TableData{
-		{"Name", "Type", "Target"},
+		{"Name", "Type", "Target", "Tags"},
 	}
 
 	for _, b := range bookmarks {
-		data = append(data, []string{b.Name, b.Type, b.Target})
+		data = append(data, []string{b.Name, b.Type, b.Target, strings.Join(b.Tags, ", ")})
 	}
 
 	pterm.DefaultTable.
