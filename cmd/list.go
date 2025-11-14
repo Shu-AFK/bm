@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var tag string
+
 var ListBookmarksCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Lists all bookmarks",
@@ -22,8 +24,15 @@ func list(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if len(bookmarks) == 0 {
+	if tag != "" {
+		bookmarks = internal.SearchByTag(bookmarks, tag)
+	}
+
+	if len(bookmarks) == 0 && tag == "" {
 		pterm.Warning.Println("no bookmarks saved yet")
+		return nil
+	} else if len(bookmarks) == 0 {
+		pterm.Warning.Println("no bookmarks with this tag found")
 		return nil
 	}
 
@@ -44,5 +53,7 @@ func list(cmd *cobra.Command, args []string) error {
 	return nil
 }
 func init() {
+	ListBookmarksCmd.Flags().StringVarP(&tag, "tag", "t", "", "filter by tag")
+
 	rootCmd.AddCommand(ListBookmarksCmd)
 }
