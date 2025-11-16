@@ -13,10 +13,10 @@ import (
 var OpenBookmarkCmd = &cobra.Command{
 	Use:   "open <name>",
 	Short: "opens the bookmark with the default browser/editor or cd's into the directory",
-	RunE:  open,
+	RunE:  openCmd,
 }
 
-func open(cmd *cobra.Command, args []string) error {
+func openCmd(cmd *cobra.Command, args []string) error {
 	if len(args) != 1 {
 		pterm.Error.Println("bm open <name>")
 		return errors.New("wrong usage")
@@ -29,25 +29,41 @@ func open(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	var found *internal.Bookmark
-	for _, bookmark := range bookmarks {
-		if bookmark.Name == name {
-			found = &bookmark
-			break
+	match := internal.GetClosestMatch(bookmarks, name)
+	if match.Kind == internal.MatchNone {
+		pterm.Error.Printf("could not find match for %s\n", name)
+		return errors.New("no match found")
+	}
+
+	switch match.Kind {
+	case internal.MatchExact, internal.MatchPrefix, internal.MatchFuzzy:
+		if match.BM != nil {
+			return open(match.BM, name)
 		}
+
+		choice := internal.SelectCandidate(match.Candidates)
+		if choice == nil {
+			return nil
+		}
+
+		return open(choice, name)
+
+	case internal.MatchNone:
+		pterm.Error.Printf("could not find bookmark for %s\n", name)
+		return errors.New("no match found")
 	}
 
-	if found == nil {
-		pterm.Error.Printf("unable to find bookmark %s\n", name)
-		return errors.New("not found")
-	}
+	return errors.New("unreachable")
+}
 
-	if found.Type == "path" {
+func open(bm *internal.Bookmark, name string) error {
+	if bm.Type == "path" {
 		pterm.Error.Println("bookmark is path, currently not implemented")
 		return errors.New("unimplemented")
 	}
 
-	target := found.Target
+	target := bm.Target
+	var err error
 
 	switch runtime.GOOS {
 	case "windows":
