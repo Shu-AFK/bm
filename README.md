@@ -18,7 +18,7 @@
 
 - **Add shortcuts quickly** using `bm add <name> <path-or-url>` with optional tags.
 - **List and filter** your bookmarks, including sorting by name, creation time, or target.
-- **Open anything instantly** with `bm open <name>`, whether it’s a directory, file, or browser link.
+- **Open anything instantly** with `bm open <name>`, whether it’s a directory, file, or browser link, it opens everything with the default editor / browser.
 - **Adjust or clean up entries** using `bm edit` and `bm remove`.
 
 ## Installation
