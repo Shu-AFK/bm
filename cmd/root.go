@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Shu-AFK/bm/internal/theme"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -30,6 +31,8 @@ func Execute() {
 }
 
 func init() {
+	theme.ConfigurePrinters()
+
 	defaultHelp := rootCmd.HelpFunc()
 
 	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
@@ -53,13 +56,7 @@ func init() {
 		flags := extractFlags(cmd)
 		commands := extractCommands(cmd)
 
-		accentStart := pterm.NewRGB(255, 160, 130)
-		accentEnd := pterm.NewRGB(230, 120, 255)
-		errorAccent := pterm.NewStyle(pterm.FgLightMagenta)
-		pterm.Error.Prefix = pterm.Prefix{Text: "ERROR", Style: errorAccent}
-		pterm.Error.MessageStyle = errorAccent
-
-		renderSectionTitle("Overview", accentStart, accentEnd)
+		renderSectionTitle("Overview")
 		description := cmd.Long
 		if description == "" {
 			description = cmd.Short
@@ -67,7 +64,7 @@ func init() {
 		pterm.Println(description)
 		pterm.Println()
 
-		renderSectionTitle("Usage", accentStart, accentEnd)
+		renderSectionTitle("Usage")
 		title := "How to run it"
 		usageLen := len([]rune(usage))
 		titleLen := len([]rune(title))
@@ -85,14 +82,14 @@ func init() {
 		pterm.Println()
 
 		if len(commands) > 0 {
-			renderSectionTitle("Commands", accentStart, accentEnd)
+			renderSectionTitle("Commands")
 			renderCommandsTable(commands)
 			pterm.Println("Tip: append --help to a command to see its dedicated flags.")
 			pterm.Println()
 		}
 
 		if len(flags) > 0 {
-			renderSectionTitle("Flags", accentStart, accentEnd)
+			renderSectionTitle("Flags")
 			renderFlagList(flags)
 			pterm.Println()
 		}
@@ -109,43 +106,22 @@ func printBanner() {
 bookmark manager
 `
 
-	start := pterm.NewRGB(255, 170, 140)
-	end := pterm.NewRGB(230, 120, 255)
-
 	lines := strings.Split(ascii, "\n")
 	count := len(lines)
 
 	for i, line := range lines {
-		r := uint8(int(start.R) + (int(end.R)-int(start.R))*i/count)
-		g := uint8(int(start.G) + (int(end.G)-int(start.G))*i/count)
-		b := uint8(int(start.B) + (int(end.B)-int(start.B))*i/count)
+		r := uint8(int(theme.AccentStart.R) + (int(theme.AccentEnd.R)-int(theme.AccentStart.R))*i/count)
+		g := uint8(int(theme.AccentStart.G) + (int(theme.AccentEnd.G)-int(theme.AccentStart.G))*i/count)
+		b := uint8(int(theme.AccentStart.B) + (int(theme.AccentEnd.B)-int(theme.AccentStart.B))*i/count)
 		color := pterm.NewRGB(r, g, b)
 
 		pterm.DefaultCenter.Print(color.Sprint(line))
 	}
 }
 
-func renderSectionTitle(title string, start, end pterm.RGB) {
-	pterm.Println(gradientText(strings.ToUpper(title), start, end))
-	pterm.Println(gradientText(strings.Repeat("─", len(title)+2), start, end))
-}
-
-func gradientText(text string, start, end pterm.RGB) string {
-	var b strings.Builder
-	count := len([]rune(text))
-	if count == 0 {
-		return ""
-	}
-
-	for i, r := range text {
-		mix := float64(i) / float64(count)
-		rVal := uint8(float64(start.R) + (float64(end.R)-float64(start.R))*mix)
-		gVal := uint8(float64(start.G) + (float64(end.G)-float64(start.G))*mix)
-		bVal := uint8(float64(start.B) + (float64(end.B)-float64(start.B))*mix)
-		b.WriteString(pterm.NewRGB(rVal, gVal, bVal).Sprint(string(r)))
-	}
-
-	return b.String()
+func renderSectionTitle(title string) {
+	pterm.Println(theme.GradientText(strings.ToUpper(title)))
+	pterm.Println(theme.GradientText(strings.Repeat("─", len(title)+2)))
 }
 
 func extractUsage(help string) string {
@@ -186,10 +162,11 @@ func extractCommands(cmd *cobra.Command) []commandInfo {
 func renderCommandsTable(commands []commandInfo) {
 	data := pterm.TableData{{"Command", "What it does"}}
 	for _, c := range commands {
-		data = append(data, []string{fmt.Sprintf("%s %s", pterm.LightMagenta("➜"), c.Name), c.Desc})
+		data = append(data, []string{fmt.Sprintf("%s %s", theme.SecondaryText.Sprint("➜"), c.Name), c.Desc})
 	}
 	_ = pterm.DefaultTable.
 		WithHasHeader().
+		WithHeaderStyle(theme.PrimaryStyle).
 		WithSeparator("│").
 		WithHeaderRowSeparator("─").
 		WithData(data).
@@ -230,7 +207,7 @@ func renderFlagList(flags []flagInfo) {
 	var items []pterm.BulletListItem
 	for _, f := range flags {
 		items = append(items, pterm.BulletListItem{
-			Text: fmt.Sprintf("%s  %s", pterm.LightMagenta(f.Name), f.Usage),
+			Text: fmt.Sprintf("%s  %s", theme.SecondaryText.Sprint(f.Name), f.Usage),
 		})
 	}
 	_ = pterm.DefaultBulletList.WithItems(items).Render()

@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	"github.com/Shu-AFK/bm/internal/theme"
 	"github.com/pterm/pterm"
 )
 
@@ -20,11 +21,17 @@ func SelectCandidate(candidates []*Bookmark) *Bookmark {
 		options[i] = fmt.Sprintf("%s  (%s)", c.Name, c.Target)
 	}
 
-	choice, err := pterm.DefaultInteractiveSelect.
+	printer := pterm.DefaultInteractiveSelect.
 		WithMaxHeight(10).
 		WithOptions(options).
-		WithDefaultText("Select a bookmark").
-		Show()
+		WithDefaultText(theme.GradientText("Select a bookmark"))
+
+	printer.Selector = theme.GradientText("»")
+	printer.SelectorStyle = theme.SecondaryStyle
+	printer.TextStyle = theme.SecondaryStyle
+	printer.OptionStyle = theme.PrimaryStyle
+
+	choice, err := printer.Show()
 
 	if err != nil {
 		pterm.Error.Printf("Selection aborted: %v\n", err)
