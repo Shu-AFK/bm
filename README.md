@@ -1,4 +1,4 @@
-<p align="center">
+<p>
   <img src="assets/logo.png" width="450" alt="bm logo"/>
 </p>
 
