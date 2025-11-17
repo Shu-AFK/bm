@@ -1,4 +1,4 @@
-# bm — bookmark manager CLI
+# bm - bookmark manager CLI
 
 Welcome to **bm**, a tiny command-line sidekick for stashing your favorite files, folders, and links. It keeps everything in a simple JSON file under your XDG data directory, so it plays nicely with dotfile syncing and cloud backups.
 
