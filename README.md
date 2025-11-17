@@ -5,7 +5,6 @@
 <h1 align="center">bm - Bookmark Manager CLI</h1>
 
 <p align="center">
-  <a href="https://pkg.go.dev/github.com/Shu-AFK/bm"><img src="https://pkg.go.dev/badge/github.com/Shu-AFK/bm.svg" alt="Go Reference"></a>
   <a href="https://goreportcard.com/report/github.com/Shu-AFK/bm"><img src="https://goreportcard.com/badge/github.com/Shu-AFK/bm" alt="Go Report Card"></a>
   <a href="https://github.com/Shu-AFK/bm/releases"><img src="https://img.shields.io/github/v/release/Shu-AFK/bm" alt="Latest Release"></a>
   <a href="https://github.com/Shu-AFK/bm/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Shu-AFK/bm" alt="License"></a>
