@@ -26,10 +26,10 @@ func SelectCandidate(candidates []*Bookmark) *Bookmark {
 		WithOptions(options).
 		WithDefaultText(theme.GradientText("Select a bookmark"))
 
-	printer.Selector = theme.GradientText("»")
+	printer.Selector = theme.SecondaryStyle.Sprint("»")
 	printer.SelectorStyle = theme.SecondaryStyle
 	printer.TextStyle = theme.SecondaryStyle
-	printer.OptionStyle = theme.PrimaryStyle
+	printer.OptionStyle = theme.SecondaryStyle
 
 	choice, err := printer.Show()
 
