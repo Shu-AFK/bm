@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" width="450" alt="bm logo"/>
+  <img src="assets/logo.png" width="450" style="display:block; margin:auto;" alt="bm logo"/>
 </p>
 
 <h1 align="center">bm - Bookmark Manager CLI</h1>
