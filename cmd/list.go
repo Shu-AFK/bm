@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Shu-AFK/bm/internal"
+	"github.com/Shu-AFK/bm/internal/theme"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
@@ -58,16 +59,27 @@ func list(cmd *cobra.Command, args []string) error {
 		internal.SortBookmarks(bookmarks, mode)
 	}
 
-	data := pterm.TableData{
-		{"Name", "Type", "Target", "Tags"},
+	headers := []string{
+		theme.GradientText("Name"),
+		theme.GradientText("Type"),
+		theme.GradientText("Target"),
+		theme.GradientText("Tags"),
 	}
 
+	data := pterm.TableData{headers}
+
 	for _, b := range bookmarks {
-		data = append(data, []string{b.Name, b.Type, b.Target, strings.Join(b.Tags, ", ")})
+		data = append(data, []string{
+			theme.SecondaryText.Sprint(b.Name),
+			theme.PrimaryText.Sprint(b.Type),
+			theme.SecondaryText.Sprint(b.Target),
+			theme.PrimaryText.Sprint(strings.Join(b.Tags, ", ")),
+		})
 	}
 
 	pterm.DefaultTable.
 		WithHasHeader().
+		WithHeaderStyle(theme.PrimaryStyle).
 		WithHeaderRowSeparator("-").
 		WithData(data).
 		Render()
