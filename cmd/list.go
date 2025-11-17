@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/Shu-AFK/bm/internal"
@@ -9,6 +10,7 @@ import (
 )
 
 var tag string
+var sortmode string
 
 var ListBookmarksCmd = &cobra.Command{
 	Use:   "list",
@@ -36,6 +38,26 @@ func list(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	if sortmode != "" {
+		var mode internal.SortMode
+
+		switch sortmode {
+		case "name":
+			mode = internal.SortByName
+		case "time":
+			mode = internal.SortByCreated
+		case "target":
+			mode = internal.SortByTarget
+		case "type":
+			mode = internal.SortByType
+		default:
+			pterm.Error.Printf("%s is not a valid sort mode, please choose from the following: name, time, target, type.\n", sortmode)
+			return errors.New("wrong sort mode")
+		}
+
+		internal.SortBookmarks(bookmarks, mode)
+	}
+
 	data := pterm.TableData{
 		{"Name", "Type", "Target", "Tags"},
 	}
@@ -54,6 +76,7 @@ func list(cmd *cobra.Command, args []string) error {
 }
 func init() {
 	ListBookmarksCmd.Flags().StringVarP(&tag, "tag", "t", "", "filter by tag")
+	ListBookmarksCmd.Flags().StringVarP(&sortmode, "sort", "s", "", "sort by name, time, target or type")
 
 	rootCmd.AddCommand(ListBookmarksCmd)
 }
