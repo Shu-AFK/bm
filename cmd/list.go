@@ -70,17 +70,18 @@ func list(cmd *cobra.Command, args []string) error {
 
 	for _, b := range bookmarks {
 		data = append(data, []string{
-			theme.SecondaryText.Sprint(b.Name),
-			theme.PrimaryText.Sprint(b.Type),
-			theme.SecondaryText.Sprint(b.Target),
-			theme.PrimaryText.Sprint(strings.Join(b.Tags, ", ")),
+			b.Name,
+			b.Type,
+			b.Target,
+			strings.Join(b.Tags, ", "),
 		})
 	}
 
 	pterm.DefaultTable.
 		WithHasHeader().
-		WithHeaderStyle(theme.PrimaryStyle).
-		WithHeaderRowSeparator("-").
+		WithSeparator("│").
+		WithHeaderRowSeparator("─").
+		WithBoxed(true).
 		WithData(data).
 		Render()
 
