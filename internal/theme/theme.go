@@ -42,15 +42,15 @@ func GradientTextWith(text string, start, end pterm.RGB) string {
 }
 
 func ConfigurePrinters() {
-	pterm.Error.Prefix = pterm.Prefix{Text: "ERROR", Style: SecondaryStyle}
-	pterm.Error.MessageStyle = SecondaryStyle
+	pterm.Error.Prefix.Style = pterm.NewStyle(pterm.BgDefault, pterm.FgLightRed)
+	pterm.Error.MessageStyle = pterm.NewStyle(pterm.FgLightRed)
 
-	pterm.Warning.Prefix = pterm.Prefix{Text: "WARN", Style: PrimaryStyle}
-	pterm.Warning.MessageStyle = PrimaryStyle
+	pterm.Warning.Prefix.Style = pterm.NewStyle(pterm.BgDefault, pterm.FgLightRed)
+	pterm.Warning.MessageStyle = pterm.NewStyle(pterm.FgLightRed)
 
-	pterm.Success.Prefix = pterm.Prefix{Text: "SUCCESS", Style: EmphasisStyle}
-	pterm.Success.MessageStyle = EmphasisStyle
+	pterm.Success.Prefix.Style = pterm.NewStyle(pterm.BgDefault, pterm.FgLightMagenta)
+	pterm.Success.MessageStyle = pterm.NewStyle(pterm.FgLightMagenta)
 
-	pterm.Info.Prefix = pterm.Prefix{Text: "INFO", Style: SecondaryStyle}
-	pterm.Info.MessageStyle = SecondaryStyle
+	pterm.Info.Prefix.Style = pterm.NewStyle(pterm.BgDefault, pterm.FgMagenta)
+	pterm.Info.MessageStyle = pterm.NewStyle(pterm.FgMagenta)
 }

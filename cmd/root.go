@@ -24,14 +24,55 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+var usageErrorPrinted bool
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
+		if shouldPrintUsageError(err) && !usageErrorPrinted {
+			pterm.Error.Println(err)
+		}
+		usageErrorPrinted = false
 		os.Exit(1)
 	}
+	usageErrorPrinted = false
+}
+
+func shouldPrintUsageError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	msg := strings.ToLower(err.Error())
+
+	usageIndicators := []string{
+		"unknown command",
+		"unknown flag",
+		"unknown shorthand flag",
+		"flag provided but not defined",
+	}
+
+	for _, indicator := range usageIndicators {
+		if strings.Contains(msg, indicator) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func init() {
 	theme.ConfigurePrinters()
+
+	rootCmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
+		if err == nil {
+			return nil
+		}
+
+		usageErrorPrinted = true
+		pterm.Error.Println(err)
+
+		return err
+	})
 
 	defaultHelp := rootCmd.HelpFunc()
 

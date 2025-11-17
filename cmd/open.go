@@ -57,13 +57,13 @@ func openCmd(cmd *cobra.Command, args []string) error {
 }
 
 func open(bm *internal.Bookmark, name string) error {
-	if bm.Type == "path" {
-		pterm.Error.Println("bookmark is path, currently not implemented")
-		return errors.New("unimplemented")
-	}
-
 	target := bm.Target
 	var err error
+
+	if bm.Type == "folder" {
+		pterm.Printf("cd %s\n", target)
+		return nil
+	}
 
 	switch runtime.GOOS {
 	case "windows":
@@ -78,6 +78,8 @@ func open(bm *internal.Bookmark, name string) error {
 		pterm.Error.Printf("unable to open %s: %v", name, err)
 		return err
 	}
+
+	pterm.Printf("opened %s\n", target)
 
 	return nil
 }
