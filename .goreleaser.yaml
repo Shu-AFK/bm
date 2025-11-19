@@ -1,0 +1,89 @@
+project_name: bm
+
+release:
+  github:
+    owner: Shu-AFK
+    name: bm
+
+builds:
+  - id: bm
+    main: main.go
+    binary: bm
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: default
+    builds:
+      - bm
+    format: tar.gz
+    replacements:
+      darwin: macOS
+      amd64: x86_64
+    files:
+      - LICENSE
+      - README.md
+
+nfpms:
+  - id: linux_pkgs
+    package_name: bm
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    maintainer: "Floyd Göttsch <floyd.goettsch1@gmail.com>"
+    homepage: "https://github.com/Shu-AFK/bm"
+    license: "MIT"
+    formats:
+      - deb
+      - rpm
+      - apk
+
+brews:
+  - name: bm
+    tap:
+      owner: Shu-AFK
+      name: homebrew-tap
+    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    homepage: "https://github.com/Shu-AFK/bm"
+    license: "MIT"
+    commit_author:
+      name: "CI Bot"
+      email: "bm-release-bot@users.noreply.github.com"
+    install: |
+      bin.install "bm"
+    test: |
+      system "#{bin}/bm", "--version"   # <-- give it a flag that exits 0
+
+scoops:
+  - name: bm
+    bucket:
+      owner: Shu-AFK
+      name: scoop-bucket
+    homepage: "https://github.com/Shu-AFK/bm"
+    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    license: MIT
+    url_template: "https://github.com/Shu-AFK/bm/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+aurs:
+  - name: bm-bin
+    homepage: "https://github.com/Shu-AFK/bm"
+    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    maintainers:
+      - "Floyd Göttsch <floyd.goettsch1@gmail.com>"
+    license: MIT
+
+    private_key: "{{ .Env.AUR_KEY }}"
+
+    git_url: "ssh://aur@aur.archlinux.org/bm-bin.git"
+
+    provides:
+      - bm
+    conflicts:
+      - bm
+
