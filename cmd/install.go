@@ -93,8 +93,10 @@ func snippetForShell(shell string) (string, error) {
 	switch shell {
 	case "bash", "zsh":
 		return `bm() {
-  local out
-  out=$(bm "$@")
+  local out status
+
+  out=$(command bm "$@")
+  status=$?
 
   printf '%s\n' "$out"
 
@@ -102,11 +104,14 @@ func snippetForShell(shell string) (string, error) {
     local path=${out#cd }
     cd "$path" || return
   fi
+
+  return "$status"
 }`, nil
 
 	case "fish":
 		return `function bm
-    set out (bm $argv)
+    set out (command bm $argv)
+    set status $status
 
     printf '%s\n' "$out"
 
@@ -114,6 +119,8 @@ func snippetForShell(shell string) (string, error) {
         set path (string sub -s 4 "$out")
         cd "$path"
     end
+
+    return $status
 end`, nil
 
 	case "powershell", "pwsh":
@@ -123,12 +130,24 @@ end`, nil
         [string[]]$Args
     )
 
-    $out = bm @Args
+    $bmCmd = Get-Command bm -CommandType Application,ExternalScript -ErrorAction SilentlyContinue
+    if (-not $bmCmd) {
+        Write-Error "bm executable not found in PATH"
+        return
+    }
+
+    $out = & $bmCmd @Args
+    $nativeExit = $LASTEXITCODE
+
     Write-Output $out
 
     if ($Args.Length -ge 1 -and $Args[0] -eq "open" -and $out -like "cd *") {
         $path = $out.Substring(3)
         Set-Location $path
+    }
+
+    if ($null -ne $nativeExit) {
+        $global:LASTEXITCODE = $nativeExit
     }
 }`, nil
 

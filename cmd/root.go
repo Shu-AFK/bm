@@ -201,13 +201,15 @@ func extractCommands(cmd *cobra.Command) []commandInfo {
 }
 
 func renderCommandsTable(commands []commandInfo) {
-	data := pterm.TableData{{"Command", "What it does"}}
+	data := pterm.TableData{{
+		theme.GradientText("Command"),
+		theme.GradientText("What it does"),
+	}}
 	for _, c := range commands {
 		data = append(data, []string{fmt.Sprintf("%s %s", theme.SecondaryText.Sprint("➜"), c.Name), c.Desc})
 	}
 	_ = pterm.DefaultTable.
 		WithHasHeader().
-		WithHeaderStyle(theme.PrimaryStyle).
 		WithSeparator("│").
 		WithHeaderRowSeparator("─").
 		WithData(data).
