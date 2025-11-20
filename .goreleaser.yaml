@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 version: 2
 
 project_name: bm
@@ -28,9 +27,6 @@ archives:
       - bm
     formats:
       - tar.gz
-    replacements:
-      darwin: macOS
-      amd64: x86_64
     files:
       - LICENSE
       - README.md
@@ -52,7 +48,7 @@ nfpms:
 
 brews:
   - name: bm
-    tap:
+    repository:
       owner: Shu-AFK
       name: homebrew-tap
     description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
@@ -68,7 +64,7 @@ brews:
 
 scoops:
   - name: bm
-    bucket:
+    repository:
       owner: Shu-AFK
       name: scoop-bucket
     homepage: "https://github.com/Shu-AFK/bm"
@@ -78,8 +74,6 @@ scoops:
 
 aurs:
   - name: bm-bin
-    ids:
-      - bm
     homepage: "https://github.com/Shu-AFK/bm"
     description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
     maintainers:
