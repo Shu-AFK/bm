@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
 project_name: bm
 
 release:
@@ -21,9 +24,10 @@ builds:
 
 archives:
   - id: default
-    builds:
+    ids:
       - bm
-    format: tar.gz
+    formats:
+      - tar.gz
     replacements:
       darwin: macOS
       amd64: x86_64
@@ -33,23 +37,25 @@ archives:
 
 nfpms:
   - id: linux_pkgs
+    ids:
+      - bm
     package_name: bm
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
     maintainer: "Floyd Göttsch <floyd.goettsch1@gmail.com>"
     homepage: "https://github.com/Shu-AFK/bm"
     license: "MIT"
     formats:
       - deb
       - rpm
-      - apk
+      - archlinux
 
 brews:
   - name: bm
     tap:
       owner: Shu-AFK
       name: homebrew-tap
-    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
     homepage: "https://github.com/Shu-AFK/bm"
     license: "MIT"
     commit_author:
@@ -58,7 +64,7 @@ brews:
     install: |
       bin.install "bm"
     test: |
-      system "#{bin}/bm", "--version"   # <-- give it a flag that exits 0
+      system "#{bin}/bm", "--version"
 
 scoops:
   - name: bm
@@ -66,24 +72,22 @@ scoops:
       owner: Shu-AFK
       name: scoop-bucket
     homepage: "https://github.com/Shu-AFK/bm"
-    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
     license: MIT
     url_template: "https://github.com/Shu-AFK/bm/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
 aurs:
   - name: bm-bin
+    ids:
+      - bm
     homepage: "https://github.com/Shu-AFK/bm"
-    description: "A tiny command-line sidekick for stashing your favorite files, folders, and links."
+    description: "Your command-line sidekick for teleporting to files, folders, and URLs in one hop."
     maintainers:
       - "Floyd Göttsch <floyd.goettsch1@gmail.com>"
     license: MIT
-
     private_key: "{{ .Env.AUR_KEY }}"
-
     git_url: "ssh://aur@aur.archlinux.org/bm-bin.git"
-
     provides:
       - bm
     conflicts:
       - bm
-
