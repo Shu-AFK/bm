@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/logo.png" width="250" style="display:block; margin:auto;" alt="bm logo"/>
+  <img src="assets/logo.png" width="250" alt="bm logo"/>
 </p>
 
-<h1 align="center">bm - Bookmark Manager CLI</h1>
+<h1 align="center">bm — Bookmark Manager CLI</h1>
 
 <p align="center">
   <a href="https://goreportcard.com/report/github.com/Shu-AFK/bm"><img src="https://goreportcard.com/badge/github.com/Shu-AFK/bm" alt="Go Report Card"></a>
@@ -12,61 +12,114 @@
 
 ---
 
-**bm** is a small, focused command-line tool for storing shortcuts to files, folders, and URLs. Everything is kept in a single JSON file inside your XDG data directory, which makes it easy to sync, back up, or inspect manually.
+**bm** is your command-line sidekick for teleporting to files, folders, and URLs in one hop.  
+It's fast, minimal, and keeps all bookmarks in a single human-readable JSON file under your XDG data directory.
 
-## Features
+---
 
-* **Add shortcuts quickly** using `bm add <name> <path-or-url>` with optional tags.
-* **List and filter** your bookmarks, including sorting by name, creation time, or target.
-* **Open anything instantly** with `bm open <name>`, directories, files, and URLs all open with your platform’s default applications.
-* **Install shell functions** using `bm install <shell> <show|apply>` (bash, zsh, fish, powershell). This enables `bm` to open directories with shell-native navigation.
-* **Clean up or adjust entries** with `bm edit` and `bm remove`.
+# Screenshots
+## Built-in help, commands, and clean terminal UI
+<img src="assets/main.png" width="650"/>
 
-## Installation
+## Add bookmarks instantly
+<img src="assets/add.png" width="650"/>
 
-### Go users
+## List bookmarks with clean formatting and colors
+<img src="assets/list.png" width="650"/>
+
+## Open anything, files, directories, and URLs
+<img src="assets/open.png" width="900"/>
+
+---
+
+# Fuzzy search and the interactive selector
+
+When you run:
+
+```bash
+bm open <name>
+```
+
+bm uses fuzzy matching to find the closest bookmark, even if you only type part of the name or make a typo.
+
+If several results are similar, bm automatically shows an interactive terminal selector so you can choose the exact one you want without retyping.
+
+This makes navigation extremely fast while still being precise.
+
+---
+
+# Features
+
+- Add bookmarks quickly with `bm add <name> <path-or-url>`.
+- Open directories, files, or URLs with `bm open <name>`.
+- Fuzzy matching for fast navigation.
+- Interactive selector when fuzzy matches are close.
+- List and filter bookmarks with clean table output.
+- Optional shell integration for directory navigation (`cd`).
+- Everything stored in a single JSON file.
+
+---
+
+# Installation
+
+## From source (Go)
 
 ```bash
 go install github.com/Shu-AFK/bm@latest
 ```
 
-### Prebuilt binaries & Package Managers
+## Package Managers
 
-Prebuilt binaries will be available for:
-
-* **Homebrew** (macOS, Linux)
-* **Scoop** (Windows)
-* **AUR (bm-bin)** for Arch-based distros
-* **deb / rpm / apk** packages for Linux
-
-### Example installation commands (once packages are published)
-
-**Homebrew:**
-
+### Homebrew (macOS & Linux)
 ```bash
 brew install Shu-AFK/tap/bm
 ```
 
-**Scoop:**
-
+### Scoop (Windows)
 ```powershell
 scoop bucket add bm https://github.com/Shu-AFK/scoop-bucket
 scoop install bm
 ```
 
-**AUR:**
-
+### AUR (Arch Linux)
 ```bash
 yay -S bm-bin
 ```
 
-**deb/rpm/apk:**
+### Debian / RPM / Arch packages
 Download from the GitHub Releases page.
 
-## Shell Completions
+---
 
-`bm` can generate completions for bash, zsh, fish, and powershell:
+# Usage examples
 
+### Add bookmarks
+```bash
+bm add docs ~/projects/docs/doc1.md
+bm add homepage https://example.com --tags personal,reading
+```
+
+### Open bookmarks
+```bash
+bm open docs
+bm open home
+```
+
+### List, filter, and sort
+```bash
+bm list
+bm list --tag reading
+bm list --sort type
+```
+
+### Install shell integration (either show to get the function or apply to put it directly into your profile)
+```bash
+bm install bash show
+bm install zsh apply
+bm install fish apply
+```
+
+### Shell completions
 ```bash
 bm completion bash
 bm completion zsh
@@ -74,55 +127,26 @@ bm completion fish
 bm completion powershell
 ```
 
-You can redirect these into your shell's completion directory if you want autocomplete.
+---
 
-## Usage
+# Storage
 
-Run `bm --help` for an overview, or `bm <command> --help` for command-specific details.
-
-Add bookmarks:
-
-```bash
-bm add docs ~/projects/docs/doc1.md
-bm add homepage https://example.com --tags personal,reading
-```
-
-Open a saved shortcut:
-
-```bash
-bm open docs
-```
-
-List, filter, and sort:
-
-```bash
-bm list
-bm list --tag reading
-bm list --sort type
-```
-
-Install shell integration for directory opening:
-
-```bash
-bm install bash
-bm install zsh
-```
-
-## Storage
-
-Bookmarks are stored in:
+Bookmarks are stored at:
 
 ```
 ~/.local/share/bm/bookmarks.json
 ```
 
-(or your platform’s XDG data location). The format is simple and human-readable.
+---
 
-## Roadmap
+# Roadmap
 
-* Extended metadata (notes, favorites).
-* Prebuilt packages for additional distros.
+- Extra metadata (notes, favorites)
+- More sort/filter options
+- Additional package manager support
 
-## Contributing
+---
 
-Issues and pull requests are welcome. If something feels rough or unclear, suggestions are appreciated.
+# Contributing
+
+Contributions, issues, and feature suggestions are welcome.

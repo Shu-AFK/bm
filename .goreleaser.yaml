@@ -30,6 +30,7 @@ archives:
     files:
       - LICENSE
       - README.md
+      - assets/**
 
 nfpms:
   - id: linux_pkgs
