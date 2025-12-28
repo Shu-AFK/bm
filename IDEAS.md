@@ -1,2 +1,0 @@
-- Shell script for cd'ing when opening a path
-- Allowing the bookmarking of an executable including commandline flags

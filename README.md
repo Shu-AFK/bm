@@ -51,7 +51,8 @@ This makes navigation extremely fast while still being precise.
 # Features
 
 - Add bookmarks quickly with `bm add <name> <path-or-url>`.
-- Open directories, files, or URLs with `bm open <name>`.
+- Bookmark apps with command-line arguments using `--args`.
+- Open directories, files, URLs, or launch apps with `bm open <name>`.
 - Fuzzy matching for fast navigation.
 - Interactive selector when fuzzy matches are close.
 - List and filter bookmarks with clean table output.
@@ -99,10 +100,18 @@ bm add docs ~/projects/docs/doc1.md
 bm add homepage https://example.com --tags personal,reading
 ```
 
+### Add app bookmarks with arguments
+```bash
+bm add vim-split vim --args="-O"
+bm add ls-color ls --args="-la,--color=always"
+bm add dev-server node --args="server.js,--port,3000"
+```
+
 ### Open bookmarks
 ```bash
 bm open docs
 bm open home
+bm open vim-split   # launches vim with -O flag
 ```
 
 ### List, filter, and sort
@@ -110,6 +119,19 @@ bm open home
 bm list
 bm list --tag reading
 bm list --sort type
+```
+
+### Edit bookmarks
+```bash
+bm edit docs --name documentation
+bm edit vim-split --args="-o,-p"
+```
+
+### Remove bookmarks
+```bash
+bm remove docs
+bm clear           # remove all bookmarks (with confirmation)
+bm clear --force   # remove all without confirmation
 ```
 
 ### Install shell integration (either show to get the function or apply to put it directly into your profile)

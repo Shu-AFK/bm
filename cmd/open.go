@@ -65,6 +65,16 @@ func open(bm *internal.Bookmark, name string) error {
 		return nil
 	}
 
+	if bm.Type == "app" {
+		err = exec.Command(target, bm.Args...).Start()
+		if err != nil {
+			pterm.Error.Printf("unable to run %s: %v\n", name, err)
+			return err
+		}
+		pterm.Printf("launched %s\n", target)
+		return nil
+	}
+
 	switch runtime.GOOS {
 	case "windows":
 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", target).Start()

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -14,6 +15,7 @@ import (
 )
 
 var tags []string
+var appArgs []string
 var unreachableErr = errors.New("unreachable type")
 
 var AddBookmarkCmd = &cobra.Command{
@@ -55,6 +57,10 @@ func getBookmarkInfo(target string) (string, string, error) {
 	}
 	real, fi, err := resolvePath(target)
 	if err != nil {
+		// If path doesn't exist, try to find it in PATH
+		if execPath, lookErr := exec.LookPath(target); lookErr == nil {
+			return execPath, "file", nil
+		}
 		return "", "", err
 	}
 	if fi.IsDir() {
@@ -93,11 +99,21 @@ func add(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	// If args are provided, treat this as an app bookmark
+	if len(appArgs) > 0 {
+		if bmType == "url" {
+			pterm.Error.Println("cannot use --args with URLs")
+			return errors.New("args not supported for URLs")
+		}
+		bmType = "app"
+	}
+
 	bookmarks = append(bookmarks, internal.Bookmark{
 		Name:      name,
 		Target:    resolved,
 		Type:      bmType,
 		Tags:      tags,
+		Args:      appArgs,
 		CreatedAt: time.Now().String(),
 	})
 
@@ -113,5 +129,6 @@ func add(cmd *cobra.Command, args []string) error {
 
 func init() {
 	AddBookmarkCmd.Flags().StringSliceVarP(&tags, "tags", "t", []string{}, "All tags associated with that bookmark, comma seperated")
+	AddBookmarkCmd.Flags().StringSliceVarP(&appArgs, "args", "a", []string{}, "Command line arguments for app bookmarks, comma separated")
 	rootCmd.AddCommand(AddBookmarkCmd)
 }

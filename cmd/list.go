@@ -63,6 +63,7 @@ func list(cmd *cobra.Command, args []string) error {
 		theme.GradientText("Name"),
 		theme.GradientText("Type"),
 		theme.GradientText("Target"),
+		theme.GradientText("Args"),
 		theme.GradientText("Tags"),
 	}
 
@@ -73,6 +74,7 @@ func list(cmd *cobra.Command, args []string) error {
 			b.Name,
 			b.Type,
 			b.Target,
+			strings.Join(b.Args, " "),
 			strings.Join(b.Tags, ", "),
 		})
 	}
