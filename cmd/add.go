@@ -40,15 +40,11 @@ func resolvePath(p string) (string, os.FileInfo, error) {
 	if err != nil {
 		return "", nil, err
 	}
-	real, err := filepath.EvalSymlinks(abs)
+	fi, err := os.Stat(abs)
 	if err != nil {
 		return "", nil, errors.New("path does not exist")
 	}
-	fi, err := os.Stat(real)
-	if err != nil {
-		return "", nil, errors.New("path does not exist")
-	}
-	return real, fi, nil
+	return abs, fi, nil
 }
 
 func getBookmarkInfo(target string) (string, string, error) {
