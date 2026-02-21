@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os/exec"
 	"runtime"
+	"time"
 
 	"github.com/Shu-AFK/bm/internal"
 	"github.com/pterm/pterm"
@@ -37,16 +38,27 @@ func openCmd(cmd *cobra.Command, args []string) error {
 
 	switch match.Kind {
 	case internal.MatchExact, internal.MatchPrefix, internal.MatchFuzzy:
+		var chosen *internal.Bookmark
 		if match.BM != nil {
-			return open(match.BM, name)
+			chosen = match.BM
+		} else {
+			chosen = internal.SelectCandidate(match.Candidates)
+			if chosen == nil {
+				return nil
+			}
 		}
 
-		choice := internal.SelectCandidate(match.Candidates)
-		if choice == nil {
-			return nil
+		if err := open(chosen, name); err != nil {
+			return err
 		}
 
-		return open(choice, name)
+		// Update access tracking
+		chosen.LastAccessed = time.Now().Format(time.RFC3339)
+		chosen.AccessCount++
+		if writeErr := internal.WriteBookmarks(&bookmarks); writeErr != nil {
+			pterm.Warning.Printf("could not update access stats: %v\n", writeErr)
+		}
+		return nil
 
 	case internal.MatchNone:
 		pterm.Error.Printf("could not find bookmark for %s\n", name)

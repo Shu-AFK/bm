@@ -12,6 +12,7 @@ var newName string
 var newTarget string
 var newTags []string
 var newArgs []string
+var newNote string
 
 var EditBookmarkCmd = &cobra.Command{
 	Use:   "edit <name> [flags]",
@@ -34,7 +35,9 @@ func edit(cmd *cobra.Command, args []string) error {
 	name := args[0]
 	found := false
 
-	if newName == "" && newTarget == "" && len(newTags) == 0 && len(newArgs) == 0 {
+	noteChanged := cmd.Flags().Changed("note")
+
+	if newName == "" && newTarget == "" && len(newTags) == 0 && len(newArgs) == 0 && !noteChanged {
 		pterm.Error.Println("no changes suppplied")
 		return errors.New("no changes suppplied")
 	}
@@ -56,6 +59,9 @@ func edit(cmd *cobra.Command, args []string) error {
 				if bookmarks[i].Type != "app" && bookmarks[i].Type != "url" {
 					bookmarks[i].Type = "app"
 				}
+			}
+			if noteChanged {
+				bookmarks[i].Note = newNote
 			}
 			found = true
 		}
@@ -81,6 +87,7 @@ func init() {
 	EditBookmarkCmd.Flags().StringVarP(&newTarget, "target", "t", "", "edits the target of the bookmark")
 	EditBookmarkCmd.Flags().StringSliceVar(&newTags, "tags", []string{}, "edits the tags of the bookmark")
 	EditBookmarkCmd.Flags().StringSliceVarP(&newArgs, "args", "a", []string{}, "edits the arguments for app bookmarks")
+	EditBookmarkCmd.Flags().StringVar(&newNote, "note", "", "sets a note on the bookmark")
 
 	rootCmd.AddCommand(EditBookmarkCmd)
 }

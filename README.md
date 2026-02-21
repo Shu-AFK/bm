@@ -12,7 +12,7 @@
 
 ---
 
-**bm** is your command-line sidekick for teleporting to files, folders, and URLs in one hop.  
+**bm** is your command-line sidekick for teleporting to files, folders, and URLs in one hop.
 It's fast, minimal, and keeps all bookmarks in a single human-readable JSON file under your XDG data directory.
 
 ---
@@ -56,8 +56,18 @@ This makes navigation extremely fast while still being precise.
 - Fuzzy matching for fast navigation.
 - Interactive selector when fuzzy matches are close.
 - List and filter bookmarks with clean table output.
+- Pin important bookmarks so they always appear first.
+- Attach notes to bookmarks and search across them.
+- Track access history and see recently opened bookmarks.
+- Rename bookmarks with automatic group reference updates.
+- Organize bookmarks into named groups and open them all at once.
+- Copy any bookmark target to the clipboard.
+- Import browser bookmarks from Netscape HTML export files.
+- Full-text search across name, tags, and notes with relevance scoring.
+- Usage statistics: totals, type breakdown, top accessed, top tags.
+- Deduplication: interactively remove bookmarks with duplicate targets.
 - Optional shell integration for directory navigation (`cd`).
-- Everything stored in a single JSON file.
+- Everything stored in human-readable JSON files.
 
 ---
 
@@ -119,12 +129,65 @@ bm open vim-split   # launches vim with -O flag
 bm list
 bm list --tag reading
 bm list --sort type
+bm list --pinned        # show only pinned bookmarks
 ```
 
 ### Edit bookmarks
 ```bash
 bm edit docs --name documentation
 bm edit vim-split --args="-o,-p"
+bm edit docs --note "main API reference"
+```
+
+### Pin bookmarks
+```bash
+bm pin docs            # pin (or unpin if already pinned)
+bm list --pinned       # show only pinned bookmarks
+```
+
+### Rename a bookmark
+```bash
+bm rename docs documentation
+```
+
+### Copy target to clipboard
+```bash
+bm copy homepage       # copies the URL to clipboard
+```
+
+### Search bookmarks
+```bash
+bm search api          # searches name, tags, and notes
+```
+
+### Recent bookmarks
+```bash
+bm recent              # show 10 most recently opened
+bm recent --count 5    # show 5 most recently opened
+```
+
+### Groups
+```bash
+bm group add work docs server config   # create a group
+bm group list                          # list all groups
+bm group open work                     # open all bookmarks in group
+bm group remove work                   # delete a group
+```
+
+### Import bookmarks
+```bash
+bm import backup.json                  # replace bookmarks from JSON
+bm import bookmarks.html --browser     # import from browser HTML export
+```
+
+### Statistics
+```bash
+bm stats
+```
+
+### Deduplicate
+```bash
+bm dedup               # find duplicate targets and interactively remove them
 ```
 
 ### Remove bookmarks
@@ -159,13 +222,11 @@ Bookmarks are stored at:
 ~/.local/share/bm/bookmarks.json
 ```
 
----
+Groups are stored at:
 
-# Roadmap
-
-- Extra metadata (notes, favorites)
-- More sort/filter options
-- Additional package manager support
+```
+~/.local/share/bm/groups.json
+```
 
 ---
 
